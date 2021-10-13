@@ -1,0 +1,28 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Server para o RUsbé",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "tsc": "./node_modules/typescript/bin/tsc"
+  },
+  "author": "PET-Informática",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^4.17.7",
+    "@types/mongoose": "^5.7.36",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.7",
+    "rxjs": "^6.6.3",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.7"
+  },
+  "devDependencies": {
+    "request": "^2.34",
+    "request-promise": "^4.2.2",
+    "@types/request-promise": "^4.1.38"
+  }
+}
