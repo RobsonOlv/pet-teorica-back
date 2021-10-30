@@ -33,6 +33,7 @@ function clearCpf(cpf: any) {
 
 userService.get('/', async (req, res) => {
     const ra = req.query.ra, cpf = clearCpf(req.query.cpf);
+    res.header("Access-Control-Allow-Origin", "*");
     console.log("GET /user", ra, cpf);
     if (!ra || !cpf) {
         res.send({ 'error': 'bad_request' });
