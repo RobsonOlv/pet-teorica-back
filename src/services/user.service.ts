@@ -31,15 +31,17 @@ function clearCpf(cpf: any) {
     return cpf.match(/\d+/g).join('');
 }
 
-userService.get('/', async (req, res) => {
-    const ra = req.query.ra, cpf = clearCpf(req.query.cpf);
+userService.post('/login', async (req, res) => {
+    const ra = req.body.ra, cpf = clearCpf(req.body.cpf);
     res.header("Access-Control-Allow-Origin", "*");
-    console.log("GET /user", ra, cpf);
+    console.log("POST /user/login", ra, cpf);
+
     if (!ra || !cpf) {
-        res.send({ 'error': 'bad_request' });
+        res.send({ 'error': 'bad_request'});
         return;
     }
     const user: any = await userRep.findOneUser(ra);
+    console.log(user);
     if (!user) {
         res.send({ 'error': 'ra_notfound' });
         return;
@@ -64,25 +66,33 @@ userService.get('/', async (req, res) => {
     //0=>Pré tempo de prova
     //1=>Durante a prova
     //2=>Já passou do tempo
-    const status = getCurrentExamStatus((new Date(mongoExam.startDate)).getTime(), minutesToMiliseconds(mongoExam.durationInMinutes));
+    let status = getCurrentExamStatus((new Date(mongoExam.startDate)).getTime(), minutesToMiliseconds(mongoExam.durationInMinutes));
 
-    const provaObject = clearAnswersFromExam(mongoExam);
     var error = "";
+    let provaObject = {};
+    
     if (status !== 1) {
         provaObject['questions'] = [];
         provaObject['error'] = error = status ? 'post_exam' : 'pre_exam';
+        if(status == 2) {
+            provaObject = mongoExam;
+        }
+    } else {
+        provaObject = clearAnswersFromExam(mongoExam);
     }
+
     res.status(200);
     res.send({
         name: user.name,
         modalidade,
         status,
         prova: provaObject,
+        choices: (status == 2) ? user.resultado.choices : undefined,
         error
     })
 });
 
-userService.post('/', async (req, res) => {
+userService.post('/update', async (req, res) => {
     const ra = req.body.ra, cpf = clearCpf(req.body.cpf);
     const resposta = req.body.resposta;
     console.log("POST /user", ra, cpf, resposta);

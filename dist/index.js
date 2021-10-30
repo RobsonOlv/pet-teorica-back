@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const user_service_1 = __importDefault(require("./services/user.service"));
+const gabarito_service_1 = __importDefault(require("./services/gabarito.service"));
 const express_2 = __importDefault(require("express"));
 const dotenv = require('dotenv');
 dotenv.config();
@@ -24,11 +25,13 @@ const app = express_1.default();
 const port = process.env.PORT || '3333';
 app.use(express_1.default.json());
 app.use(cors_1.default());
+console.log(process.env.teste);
 mongoose_1.default.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
 app.use('/user', user_service_1.default);
+app.use('/gabarito', gabarito_service_1.default);
 // Test route
 app.use('/ok', express_2.default().get('/', (_, res) => __awaiter(void 0, void 0, void 0, function* () { return res.sendStatus(200); })));
 const server = app.listen(port, () => {

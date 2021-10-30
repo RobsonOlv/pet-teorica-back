@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors'
 import user from './services/user.service';
+import gabarito from './services/gabarito.service';
 import Router from 'express';
 
 
@@ -20,6 +21,8 @@ mongoose.connect(process.env.MONGO_URL,
     });
 
 app.use('/user', user);
+app.use('/gabarito', gabarito);
+
 // Test route
 app.use('/ok', Router().get('/', async (_, res) => { return res.sendStatus(200); }))
 
