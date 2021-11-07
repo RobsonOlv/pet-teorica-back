@@ -42,7 +42,7 @@ gabaritoService.get('/', (req, res) => __awaiter(void 0, void 0, void 0, functio
     //1=>Medio
     const modalidade = Number(mod) === 1 ? 'medio' : 'fundamental';
     //colocar o ano
-    const mongoExam = yield examRep.findExam(modalidade);
+    const mongoExam = yield examRep.findExam(modalidade, ano);
     if (!mongoExam) {
         res.send({ 'error': 'exam_notfound' });
         return;

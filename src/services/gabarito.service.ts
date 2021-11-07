@@ -1,5 +1,4 @@
 import Router from 'express';
-import { UserRepository } from '../repositories/user.repository';
 import { ExamRepository } from '../repositories/exam.repository';
 
 const gabaritoService = Router();
@@ -39,7 +38,7 @@ gabaritoService.get('/', async (req, res) => {
     const modalidade = Number(mod) === 1 ? 'medio' : 'fundamental';
 
     //colocar o ano
-    const mongoExam: any = await examRep.findExam(modalidade);
+    const mongoExam: any = await examRep.findExam(modalidade, ano);
     if (!mongoExam) {
         res.send({ 'error': 'exam_notfound' });
         return;

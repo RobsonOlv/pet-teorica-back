@@ -32,15 +32,16 @@ function clearCpf(cpf: any) {
 }
 
 userService.post('/login', async (req, res) => {
-    const ra = req.body.ra, cpf = clearCpf(req.body.cpf);
+    const ra = req.body.ra, cpf = clearCpf(req.body.cpf), ano = req.body.ano;
     res.header("Access-Control-Allow-Origin", "*");
     console.log("POST /user/login", ra, cpf);
 
-    if (!ra || !cpf) {
+    if (!ra || !cpf || !ano) {
         res.send({ 'error': 'bad_request'});
         return;
     }
-    const user: any = await userRep.findOneUser(ra);
+
+    const user: any = await userRep.findOneUser(ra, ano);
     console.log(user);
     if (!user) {
         res.send({ 'error': 'ra_notfound' });
@@ -56,7 +57,7 @@ userService.post('/login', async (req, res) => {
     //0=>Fundamental
     //1=>Medio
     const modalidade = user.modalidade === 1 ? 'medio' : 'fundamental';
-    const mongoExam: any = await examRep.findExam(modalidade);
+    const mongoExam: any = await examRep.findExam(modalidade, ano);
     if (!mongoExam) {
         res.send({ 'error': 'exam_notfound' });
         return;
@@ -71,13 +72,12 @@ userService.post('/login', async (req, res) => {
     var error = "";
     let provaObject = {};
     
-    if (status !== 1) {
+    if (status == 0) {
         provaObject['questions'] = [];
-        provaObject['error'] = error = status ? 'post_exam' : 'pre_exam';
-        if(status == 2) {
-            provaObject = mongoExam;
-        }
-    } else {
+        provaObject['error'] = error = 'pre_exam';
+    } else if (status == 2) {
+        provaObject = mongoExam;
+    }  else {
         provaObject = clearAnswersFromExam(mongoExam);
     }
 
@@ -93,14 +93,14 @@ userService.post('/login', async (req, res) => {
 });
 
 userService.post('/update', async (req, res) => {
-    const ra = req.body.ra, cpf = clearCpf(req.body.cpf);
+    const ra = req.body.ra, cpf = clearCpf(req.body.cpf), ano = req.body.ano;
     const resposta = req.body.resposta;
     console.log("POST /user", ra, cpf, resposta);
     if (!ra || !cpf || !resposta) {
         res.send({ 'error': 'bad_request' });
         return;
     }
-    const user: any = await userRep.findOneUser(ra);
+    const user: any = await userRep.findOneUser(ra, ano);
     if (!user) {
         res.send({ 'error': 'ra_notfound' });
         return;
@@ -115,7 +115,7 @@ userService.post('/update', async (req, res) => {
     //0=>Fundamental
     //1=>Medio
     const modalidade = user.modalidade == 1 ? 'medio' : 'fundamental';
-    const mongoExam: any = await examRep.findExam(modalidade);
+    const mongoExam: any = await examRep.findExam(modalidade, ano);
     if (!mongoExam) {
         res.send({ 'error': 'exam_notfound' });
         return;
@@ -133,7 +133,7 @@ userService.post('/update', async (req, res) => {
     }
 
     resposta['submissionTime'] = new Date();
-    const response = await userRep.updateOneUser(ra, resposta);
+    const response = await userRep.updateOneUser(ra, ano, resposta);
 
     if (response.ok === 1 && response.nModified === 1) {
         res.sendStatus(200);

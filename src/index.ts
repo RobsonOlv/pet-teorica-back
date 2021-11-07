@@ -13,13 +13,14 @@ const app = express();
 const port = process.env.PORT || '3333';
 app.use(express.json());
 app.use(cors())
+
 console.log(process.env.teste)
+
 mongoose.connect(process.env.MONGO_URL,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
-
 app.use('/user', user);
 app.use('/gabarito', gabarito);
 

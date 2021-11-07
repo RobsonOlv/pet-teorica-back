@@ -5,7 +5,8 @@ const ExamSchema = new mongoose.Schema({
   name: String,
   startDate: String,
   questions: Array,
-  durationInMinutes: Number
+  durationInMinutes: Number,
+  ano: String
 })
 
-export default mongoose.model('Exam', ExamSchema)
+export default mongoose.model('Exam', ExamSchema, 'Exams')

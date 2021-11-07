@@ -9,7 +9,8 @@ const UserSchema = new mongoose_1.default.Schema({
     cpf: Number,
     name: String,
     modalidade: Number,
-    resultado: Object
+    resultado: Object,
+    ano: String
 });
-exports.default = mongoose_1.default.model('User', UserSchema);
+exports.default = mongoose_1.default.model('User', UserSchema, 'Users');
 //# sourceMappingURL=user.js.map

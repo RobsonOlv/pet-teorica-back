@@ -39,14 +39,14 @@ function clearCpf(cpf) {
     return cpf.match(/\d+/g).join('');
 }
 userService.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const ra = req.body.ra, cpf = clearCpf(req.body.cpf);
+    const ra = req.body.ra, cpf = clearCpf(req.body.cpf), ano = req.body.ano;
     res.header("Access-Control-Allow-Origin", "*");
     console.log("POST /user/login", ra, cpf);
-    if (!ra || !cpf) {
+    if (!ra || !cpf || !ano) {
         res.send({ 'error': 'bad_request' });
         return;
     }
-    const user = yield userRep.findOneUser(ra);
+    const user = yield userRep.findOneUser(ra, ano);
     console.log(user);
     if (!user) {
         res.send({ 'error': 'ra_notfound' });
@@ -60,7 +60,7 @@ userService.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
     //0=>Fundamental
     //1=>Medio
     const modalidade = user.modalidade === 1 ? 'medio' : 'fundamental';
-    const mongoExam = yield examRep.findExam(modalidade);
+    const mongoExam = yield examRep.findExam(modalidade, ano);
     if (!mongoExam) {
         res.send({ 'error': 'exam_notfound' });
         return;
@@ -72,13 +72,12 @@ userService.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
     let status = getCurrentExamStatus((new Date(mongoExam.startDate)).getTime(), minutesToMiliseconds(mongoExam.durationInMinutes));
     var error = "";
     let provaObject = {};
-    status = 1;
-    if (status !== 1) {
+    if (status == 0) {
         provaObject['questions'] = [];
-        provaObject['error'] = error = status ? 'post_exam' : 'pre_exam';
-        if (status == 2) {
-            provaObject = mongoExam;
-        }
+        provaObject['error'] = error = 'pre_exam';
+    }
+    else if (status == 2) {
+        provaObject = mongoExam;
     }
     else {
         provaObject = clearAnswersFromExam(mongoExam);
@@ -94,14 +93,14 @@ userService.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
     });
 }));
 userService.post('/update', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const ra = req.body.ra, cpf = clearCpf(req.body.cpf);
+    const ra = req.body.ra, cpf = clearCpf(req.body.cpf), ano = req.body.ano;
     const resposta = req.body.resposta;
     console.log("POST /user", ra, cpf, resposta);
     if (!ra || !cpf || !resposta) {
         res.send({ 'error': 'bad_request' });
         return;
     }
-    const user = yield userRep.findOneUser(ra);
+    const user = yield userRep.findOneUser(ra, ano);
     if (!user) {
         res.send({ 'error': 'ra_notfound' });
         return;
@@ -114,7 +113,7 @@ userService.post('/update', (req, res) => __awaiter(void 0, void 0, void 0, func
     //0=>Fundamental
     //1=>Medio
     const modalidade = user.modalidade == 1 ? 'medio' : 'fundamental';
-    const mongoExam = yield examRep.findExam(modalidade);
+    const mongoExam = yield examRep.findExam(modalidade, ano);
     if (!mongoExam) {
         res.send({ 'error': 'exam_notfound' });
         return;
@@ -129,7 +128,7 @@ userService.post('/update', (req, res) => __awaiter(void 0, void 0, void 0, func
         return;
     }
     resposta['submissionTime'] = new Date();
-    const response = yield userRep.updateOneUser(ra, resposta);
+    const response = yield userRep.updateOneUser(ra, ano, resposta);
     if (response.ok === 1 && response.nModified === 1) {
         res.sendStatus(200);
         return;

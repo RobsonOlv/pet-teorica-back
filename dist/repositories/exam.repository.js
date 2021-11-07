@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExamRepository = void 0;
 const exam_1 = __importDefault(require("../models/exam"));
 class ExamRepository {
-    findExam(modality) {
+    findExam(modality, ano) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield exam_1.default.findOne({ modalidade: modality }));
+            return (yield exam_1.default.findOne({ modalidade: modality, ano: ano }));
         });
     }
 }

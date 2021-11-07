@@ -1,15 +1,15 @@
 import UserSchema from '../models/user';
 
 export class UserRepository {
-    async findOneUser(ra: any) {
+    async findOneUser(ra: any, ano: any) {
         return (
-            await UserSchema.findOne({ ra: ra })
+            await UserSchema.findOne({ ra: ra, ano: ano })
         );
     }
 
-    async updateOneUser(ra: any, resultado: any) {
+    async updateOneUser(ra: any, ano: any, resultado: any) {
         return (
-            await UserSchema.updateOne({ ra: ra }, [{ $set: { resultado: resultado } }])
+            await UserSchema.updateOne({ ra: ra, ano: ano }, [{ $set: { resultado: resultado } }])
         );
     }
 }

@@ -15,14 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRepository = void 0;
 const user_1 = __importDefault(require("../models/user"));
 class UserRepository {
-    findOneUser(ra) {
+    findOneUser(ra, ano) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield user_1.default.findOne({ ra: ra }));
+            return (yield user_1.default.findOne({ ra: ra, ano: ano }));
         });
     }
-    updateOneUser(ra, resultado) {
+    updateOneUser(ra, ano, resultado) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield user_1.default.updateOne({ ra: ra }, [{ $set: { resultado: resultado } }]));
+            return (yield user_1.default.updateOne({ ra: ra, ano: ano }, [{ $set: { resultado: resultado } }]));
         });
     }
 }

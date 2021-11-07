@@ -5,7 +5,8 @@ const UserSchema = new mongoose.Schema({
     cpf: Number,
     name: String,
     modalidade: Number,
-    resultado: Object
+    resultado: Object,
+    ano: String
 })
 
-export default mongoose.model('User', UserSchema)
+export default mongoose.model('User', UserSchema, 'Users')

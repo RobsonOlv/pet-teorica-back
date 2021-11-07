@@ -9,7 +9,8 @@ const ExamSchema = new mongoose_1.default.Schema({
     name: String,
     startDate: String,
     questions: Array,
-    durationInMinutes: Number
+    durationInMinutes: Number,
+    ano: String
 });
-exports.default = mongoose_1.default.model('Exam', ExamSchema);
+exports.default = mongoose_1.default.model('Exam', ExamSchema, 'Exams');
 //# sourceMappingURL=exam.js.map
