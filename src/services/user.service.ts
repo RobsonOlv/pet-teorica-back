@@ -87,7 +87,7 @@ userService.post('/login', async (req, res) => {
         modalidade,
         status,
         prova: provaObject,
-        choices: (status == 2) ? user.resultado.choices : undefined,
+        choices: (status == 2 && user.resultado) ? user.resultado.choices : undefined,
         error
     })
 });

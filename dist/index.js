@@ -25,7 +25,6 @@ const app = express_1.default();
 const port = process.env.PORT || '3333';
 app.use(express_1.default.json());
 app.use(cors_1.default());
-console.log(process.env.teste);
 mongoose_1.default.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true

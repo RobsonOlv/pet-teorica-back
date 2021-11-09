@@ -88,7 +88,7 @@ userService.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, funct
         modalidade,
         status,
         prova: provaObject,
-        choices: (status == 2) ? user.resultado.choices : undefined,
+        choices: (status == 2 && user.resultado) ? user.resultado.choices : undefined,
         error
     });
 }));
